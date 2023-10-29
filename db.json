@@ -1,0 +1,6 @@
+{
+  "host": "127.0.0.1",
+  "user": "MYSQL_USERNAME",
+  "password": "MYSQL_PASSWORD",
+  "database": "belepteto"
+}
