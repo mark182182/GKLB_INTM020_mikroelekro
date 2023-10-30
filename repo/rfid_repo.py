@@ -87,5 +87,4 @@ class RfidRepository:
       rId = row[0]
       rErtek = row[1]
       rfid = Rfid(rId, rErtek)
-
     return rfid
