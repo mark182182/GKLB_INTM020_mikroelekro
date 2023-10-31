@@ -2,6 +2,7 @@ from dao.user_id_dao import UserId
 from db.db import Database
 
 
+# Database queries related to the 'felhasznaloAzonosito' table
 class UserIdRepository:
   __db: Database
 

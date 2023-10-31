@@ -2,6 +2,7 @@ from dao.user_dao import User
 from db.db import Database
 
 
+# Database queries related to the 'felhasznalok' table
 class UserRepository:
   __db: Database
 

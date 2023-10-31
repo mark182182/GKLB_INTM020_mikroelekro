@@ -2,6 +2,7 @@ from db.db import Database
 from dao.rfid_dao import Rfid
 
 
+# Database queries related to the 'rfid' table
 class RfidRepository:
   __db: Database
 
