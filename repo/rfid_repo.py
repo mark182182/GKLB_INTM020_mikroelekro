@@ -9,13 +9,13 @@ class RfidRepository:
   def __init__(self, db: Database):
     self.__db = db
 
-  def get_rfid_by_id(self, rId: str) -> Rfid:
+  def get_rfid_by_value(self, rErtek: str) -> Rfid:
     cursor = self.__db.conn.cursor()
 
-    cursor.execute("SELECT rId, rErtek FROM belepteto.rfid WHERE rId = %s", [rId])
+    cursor.execute("SELECT rId, rErtek FROM belepteto.rfid WHERE rErtek = %s", [rErtek])
     existingRfid = self.__create_rfid_from_results(cursor.fetchall())
     if existingRfid is None:
-      raise ValueError(f'Rfid with id: {rId} does not exist!')
+      raise ValueError(f'Rfid with value: {rErtek} does not exist!')
 
     self.__db.conn.commit()
     cursor.close()
@@ -55,7 +55,7 @@ class RfidRepository:
     cursor = self.__db.conn.cursor()
 
     try:
-      existingRfid = self.get_rfid_by_id(rfidDetails["id"])
+      existingRfid = self.get_rfid_by_value(rfidDetails["ertek"])
       if existingRfid is None:
         raise ValueError(f'Rfid with id: {rfidDetails["id"]} does not exist!')
 
@@ -63,20 +63,20 @@ class RfidRepository:
                      [rfidDetails["ertek"], rfidDetails["id"]])
       self.__db.conn.commit()
 
-      rfid = self.get_rfid_by_id(rfidDetails["id"])
+      rfid = self.get_rfid_by_value(rfidDetails["ertek"])
       return rfid
 
     finally:
       self.__db.conn.commit()
       cursor.close()
 
-  def delete_rfid(self, rId: str):
+  def delete_rfid(self, rErtek: str):
     cursor = self.__db.conn.cursor()
     try:
-      existingRfid = self.get_rfid_by_id(rId)
+      existingRfid = self.get_rfid_by_value(rErtek)
       if existingRfid is None:
-        raise ValueError(f'Rfid with id: {rId} does not exist!')
-      cursor.execute("DELETE FROM belepteto.rfid WHERE rId=%s", [rId])
+        raise ValueError(f'Rfid with value: {rErtek} does not exist!')
+      cursor.execute("DELETE FROM belepteto.rfid WHERE rId=%s", [existingRfid.getRid()])
 
     finally:
       self.__db.conn.commit()

@@ -4,14 +4,14 @@ from flask import request
 from app import app, rfidRepo
 
 
-@app.route('/rfid/<rId>', methods=['GET'])
-def get_rfid(rId: str):
+@app.route('/rfid/<rErtek>', methods=['GET'])
+def get_rfid(rErtek: str):
   try:
-    rfid = rfidRepo.get_rfid_by_id(rId)
+    rfid = rfidRepo.get_rfid_by_value(rErtek)
 
     return jsonpickle.encode(rfid)
   except Exception as e:
-    return jsonpickle.encode({'error': 'Unable to retrieve rfid by id', 'details': str(e)}), 500
+    return jsonpickle.encode({'error': 'Unable to retrieve rfid by value', 'details': str(e)}), 500
 
 
 @app.route('/rfids', methods=['GET'])

@@ -12,7 +12,7 @@ db.setup()
 
 userRepo = UserRepository(db)
 rfidRepo = RfidRepository(db)
-userIdRepo = UserIdRepository(db)
-entryRepo = EntryRepository(db)
+userIdRepo = UserIdRepository(db, rfidRepo)
+entryRepo = EntryRepository(db, userIdRepo)
 
 from route import user_route, rfid_route, user_id_route, entry_route

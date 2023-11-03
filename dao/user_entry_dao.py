@@ -1,5 +1,4 @@
 # Data access object for retrieving data from the 'felhasznaloAzonosito' and 'belepes' tables
-from dao.entry_dao import Entry
 from dao.user_dao import User
 
 class UserEntry:
@@ -7,16 +6,16 @@ class UserEntry:
   __rfId: int
   __belepIdo: str
 
-  def __init__(self, userId: UserId, entry: Entry):
-    self.__userId = userId
-    self.__entry = entry
+  def __init__(self, user: User, rfId: int, belepIdo: str):
+    self.__user = user
+    self.__rfId = rfId
+    self.__belepIdo = belepIdo
 
-    self.__user
-    self.__rfId
-    self.__belepIdo
+  def getUser(self) -> User:
+    return self.__user
 
-  def getUserId(self) -> UserId:
-    return self.__userId
+  def getRfId(self) -> int:
+    return self.__rfId
 
-  def getEntry(self) -> Entry:
-    return self.__entry
+  def getBelepIdo(self) -> str:
+    return self.__belepIdo

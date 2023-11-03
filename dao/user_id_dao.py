@@ -2,29 +2,28 @@
 class UserId:
   __fhAzonId: int
   __fhId: int
-  __rfId: int
+  __rId: int
+  __rfErtek: str
   __letiltva: bool
 
-  def __init__(self, fhAzonId: int, fhId: int, rfId: int, letiltva: bool):
+  def __init__(self, fhAzonId: int, fhId: int, rId: int, rfErtek: str, letiltva: bool):
     self.__fhAzonId = fhAzonId
     self.__fhId = fhId
-    self.__rfId = rfId
+    self.__rId = rId
+    self.__rfErtek = rfErtek
     self.__letiltva = letiltva
 
   def getFhId(self) -> int:
     return self.__fhId
 
-  def getFhNev(self) -> str:
-    return self.__fhNev
-
   def getFhAzonId(self) -> int:
     return self.__fhAzonId
 
-  def getFhId(self) -> int:
-    return self.__fhId
+  def getRid(self) -> int:
+    return self.__rId
 
-  def getRfId(self) -> int:
-    return self.__rfId
+  def getRfertek(self) -> str:
+    return self.__rfErtek
 
   def getLetiltva(self) -> bool:
     return self.__letiltva
