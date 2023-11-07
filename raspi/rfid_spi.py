@@ -19,8 +19,6 @@ class RfidSpi:
     if not self.__is_reading:
       self.__is_reading = True
       uid = self.__rdr.read_id(as_number=True)
-      # fix this
-      uid = 123456781234
       print(f'reading card: {uid}')
       if uid is not None:
         # print(f'reading card: {uid}')

@@ -98,8 +98,8 @@ INSERT INTO `belepteto`.`felhasznalok` VALUES (NULL, 'Gipsz Jakab');
 INSERT INTO `belepteto`.`felhasznalok` VALUES (NULL, 'Nagy Paszkál');
 INSERT INTO `belepteto`.`felhasznalok` VALUES (NULL, 'Kiss Béla');
 
-INSERT INTO `belepteto`.`rfid` VALUES (NULL, '123456781234');
-INSERT INTO `belepteto`.`rfid` VALUES (NULL, '111144448888');
+INSERT INTO `belepteto`.`rfid` VALUES (NULL, '3100821010');
+INSERT INTO `belepteto`.`rfid` VALUES (NULL, '1913502801');
 
 INSERT INTO `belepteto`.`felhasznaloAzonosito` VALUES (NULL, 1,1,0);
 INSERT INTO `belepteto`.`felhasznaloAzonosito` VALUES (NULL, 2,2,1);

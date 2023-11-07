@@ -35,12 +35,17 @@ export MYSQL_USERNAME=$mysqlUser
 export MYSQL_PASSWORD=$mysqlPass
 
 echo "------ starting docker container --------"
-isMysqlRunning=$(docker ps -f 'name=some-mysql' | grep -o 'some-mysql' | wc -l)
-if [[ $isMysqlRunning == 0 ]]; then
-  echo "starting container"
-  docker run --name some-mysql -p 3306:3306 -p 33060:33060 -e MYSQL_ROOT_PASSWORD=$MYSQL_PASSWORD -d mysql:latest
-else
+mysqlContainer=$(docker ps -a -f 'name=some-mysql')
+if [[ -n $mysqlContainer ]]; then
+  if [[ $(echo $mysqlContainer | grep -o 'Exited') ]]; then
+    echo "starting stopped container"
+    docker start some-mysql
+  else
     echo "MySQL is already running"
+  fi
+else
+    echo "creating container"
+    docker run --name some-mysql -p 3306:3306 -p 33060:33060 -e MYSQL_ROOT_PASSWORD=$MYSQL_PASSWORD -d mysql:latest
 fi
 
 echo "------ starting webserver --------"
