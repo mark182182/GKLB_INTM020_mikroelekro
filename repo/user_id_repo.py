@@ -59,7 +59,7 @@ class UserIdRepository:
     existingRfid: Rfid = self.__rfidRepo.get_rfid_by_value(userIdDetails["rErtek"])
 
     cursor.execute("INSERT INTO belepteto.felhasznaloAzonosito VALUES (NULL, %s, %s, 0)",
-                   [userIdDetails["fhId"], existingRfid.getRid()])
+                   [userIdDetails["fhId"], existingRfid.get_rid()])
     self.__db.conn.commit()
 
     cursor.execute(
@@ -80,12 +80,12 @@ class UserIdRepository:
     existingUserId: UserId = self.get_userId_by_rErtek(rErtek)
 
     cursor.execute("DELETE FROM belepteto.felhasznaloAzonosito WHERE rId = %s",
-                   [existingUserId.getRid()])
+                   [existingUserId.get_rid()])
     self.__db.conn.commit()
 
     cursor.execute("""
     SELECT fhAzonId, fhId, rId, letiltva FROM belepteto.felhasznaloAzonosito as fa
-    WHERE rId = %s""", [existingUserId.getRid()])
+    WHERE rId = %s""", [existingUserId.get_rid()])
 
     removedUserId = self.__create_userId_from_results(cursor.fetchall())
 

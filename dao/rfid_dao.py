@@ -7,8 +7,8 @@ class Rfid:
     self.__rId = rId
     self.__rErtek = rErtek
 
-  def getRid(self) -> int:
+  def get_rid(self) -> int:
     return self.__rId
 
-  def getRertek(self) -> str:
+  def get_rertek(self) -> str:
     return self.__rErtek

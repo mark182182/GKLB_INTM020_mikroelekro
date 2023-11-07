@@ -7,8 +7,8 @@ class User:
     self.__fhId = fhId
     self.__fhNev = fhNev
 
-  def getFhId(self) -> int:
+  def get_fh_id(self) -> int:
     return self.__fhId
 
-  def getFhNev(self) -> str:
+  def get_fh_nev(self) -> str:
     return self.__fhNev
