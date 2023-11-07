@@ -13,16 +13,16 @@ class UserId:
     self.__rfErtek = rfErtek
     self.__letiltva = letiltva
 
-  def getFhId(self) -> int:
+  def get_fh_id(self) -> int:
     return self.__fhId
 
-  def getFhAzonId(self) -> int:
+  def get_fh_azon_id(self) -> int:
     return self.__fhAzonId
 
-  def getRid(self) -> int:
+  def get_rid(self) -> int:
     return self.__rId
 
-  def getRfertek(self) -> str:
+  def get_rfertek(self) -> str:
     return self.__rfErtek
 
   def getLetiltva(self) -> bool:

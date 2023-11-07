@@ -76,7 +76,7 @@ class RfidRepository:
       existingRfid = self.get_rfid_by_value(rErtek)
       if existingRfid is None:
         raise ValueError(f'Rfid with value: {rErtek} does not exist!')
-      cursor.execute("DELETE FROM belepteto.rfid WHERE rId=%s", [existingRfid.getRid()])
+      cursor.execute("DELETE FROM belepteto.rfid WHERE rId=%s", [existingRfid.get_rid()])
 
     finally:
       self.__db.conn.commit()
