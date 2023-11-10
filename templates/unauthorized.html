@@ -1,0 +1,9 @@
+<!doctype html>
+<title>Túl sok belépési kísérlet!</title>
+<p>Kártyaszám: {{ rErtek }}</p>
+<p>Belépési idők:</p>
+<ul>
+    {%- for ido in belepIdok %}
+    <li>{{ ido -}}</li>
+    {% endfor -%}
+</ul>

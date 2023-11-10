@@ -2,6 +2,7 @@ from concurrent.futures import ThreadPoolExecutor
 
 from flask import Flask
 
+from config import Config
 from db.db import Database
 from raspi.lcd_i2c import LcdI2c
 from raspi.rfid_spi import RfidSpi
@@ -9,6 +10,9 @@ from repo.entry_repo import EntryRepository
 from repo.user_id_repo import UserIdRepository
 from repo.user_repo import UserRepository
 from repo.rfid_repo import RfidRepository
+
+config = Config()
+config.read()
 
 app = Flask(__name__)
 db = Database()

@@ -1,9 +1,10 @@
 import time
 
-import jsonpickle
 import mysql.connector
 from mysql.connector import MySQLConnection, CMySQLConnection
 from mysql.connector.pooling import PooledMySQLConnection
+
+from app import config
 from env_var import read_env_var
 from typing import Union
 
@@ -12,22 +13,17 @@ class Database:
   conn: Union[PooledMySQLConnection, MySQLConnection, CMySQLConnection] = None
 
   def setup(self):
-    serializedDbCfg = ''
-    with open('./db/db.json', 'r', encoding='utf-8') as f:
-      serializedDbCfg += f.read()
-    dbConfig = jsonpickle.decode(serializedDbCfg)
+    resolvedUsername = read_env_var(config.get_content()['mysql']['User'])
+    resolvedPassword = read_env_var(config.get_content()['mysql']['Password'])
 
-    resolvedUsername = read_env_var(dbConfig["user"])
-    resolvedPassword = read_env_var(dbConfig["password"])
-
-    self.__create_init_db(dbConfig, resolvedUsername, resolvedPassword)
+    self.__create_init_db(resolvedUsername, resolvedPassword)
     # it would be a better idea to await the transaction instead of sleeping the main thread
     time.sleep(2)
     self.conn = mysql.connector.connect(
-      host=dbConfig["host"],
+      host=config.get_content()["host"],
       user=resolvedUsername,
       password=resolvedPassword,
-      database=dbConfig["database"]
+      database=config.get_content()["database"]
     )
 
   def teardown(self):
@@ -35,9 +31,9 @@ class Database:
       raise ValueError('Connection is not configured!')
     self.conn.close()
 
-  def __create_init_db(self, dbConfig, resolvedUsername: str, resolvedPassword: str):
+  def __create_init_db(self, resolvedUsername: str, resolvedPassword: str):
     initConn = mysql.connector.connect(
-      host=dbConfig["host"],
+      host=config.get_content()["host"],
       user=resolvedUsername,
       password=resolvedPassword
     )
