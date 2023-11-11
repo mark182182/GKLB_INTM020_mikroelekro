@@ -1,3 +1,4 @@
+from app import smtp
 from dao.user_dao import User
 from dao.user_entry_dao import UserEntry
 from dao.user_id_dao import UserId
@@ -52,44 +53,52 @@ class EntryRepository:
     cursor.close()
     return userEntries
 
+  def get_times_locked(self, userId):
+    entries: list[UserEntry] = self.get_entry_by_user(userId.get_fh_id())
+    if len(entries) == 3:
+      smtp.send_email_on_unauthorized(userId.get_rfertek(), entries)
+
   def check_entry_for_rfid(self, rErtek: str) -> UserEntry:
     cursor = self.__db.conn.cursor()
-
     try:
-      existingUserId: UserId = self.__userIdRepo.get_userId_by_rErtek(rErtek)
+      try:
+        existingUserId: UserId = self.__userIdRepo.get_userId_by_rErtek(rErtek)
+      except ValueError as e:
+        self.__lcdI2c.denied_unknown()
+        raise e
+
+      cursor.execute("""
+      INSERT INTO belepteto.belepes VALUES (%s, CURRENT_TIMESTAMP)
+      """, [existingUserId.get_fh_azon_id()])
+      self.__db.conn.commit()
+
+      if existingUserId.get_letiltva():
+        self.__lcdI2c.denied_locked()
+        raise ValueError(f'{rErtek} is locked, cannot enter!')
+
+      cursor.execute("""SELECT fhAzonId, belepIdo FROM belepteto.belepes
+       WHERE fhAzonId = %s
+       ORDER BY belepIdo DESC LIMIT 1""", [existingUserId.get_fh_azon_id()])
+
+      results = cursor.fetchall()
+
+      if len(results) != 1:
+        self.__lcdI2c.denied_generic()
+        raise ValueError(f'Unable to enter using rfid value {rErtek}!')
+
+      userEntry = self.get_entry_by_user(existingUserId.get_fh_id(), True)
+
+      if len(userEntry) != 1:
+        self.__lcdI2c.denied_generic()
+        raise ValueError(f'Unable to enter using rfid value {rErtek}!')
+
+      self.__db.conn.commit()
+      self.__lcdI2c.allowed()
+      return userEntry[0]
     except ValueError as e:
-      self.__lcdI2c.denied_unknown()
       raise e
-
-    if existingUserId.getLetiltva():
-      self.__lcdI2c.denied_locked()
-      raise ValueError(f'{rErtek} is locked, cannot enter!')
-
-    cursor.execute("""
-    INSERT INTO belepteto.belepes VALUES (%s, CURRENT_TIMESTAMP)
-    """, [existingUserId.get_fh_azon_id()])
-    self.__db.conn.commit()
-
-    cursor.execute("""SELECT fhAzonId, belepIdo FROM belepteto.belepes
-     WHERE fhAzonId = %s
-     ORDER BY belepIdo DESC LIMIT 1""", [existingUserId.get_fh_azon_id()])
-
-    results = cursor.fetchall()
-
-    if len(results) != 1:
-      self.__lcdI2c.denied_generic()
-      raise ValueError(f'Unable to enter using rfid value {rErtek}!')
-
-    userEntry = self.get_entry_by_user(existingUserId.get_fh_id(), True)
-
-    if len(userEntry) != 1:
-      self.__lcdI2c.denied_generic()
-      raise ValueError(f'Unable to enter using rfid value {rErtek}!')
-
-    self.__db.conn.commit()
-    cursor.close()
-    self.__lcdI2c.allowed()
-    return userEntry[0]
+    finally:
+      cursor.close()
 
   def __create_entry_from_results(self, results) -> list[UserEntry]:
     userEntries: list[UserEntry] = []

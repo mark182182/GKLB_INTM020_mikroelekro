@@ -25,5 +25,5 @@ class UserId:
   def get_rfertek(self) -> str:
     return self.__rfErtek
 
-  def getLetiltva(self) -> bool:
+  def get_letiltva(self) -> bool:
     return self.__letiltva
