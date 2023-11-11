@@ -4,7 +4,7 @@ import mysql.connector
 from mysql.connector import MySQLConnection, CMySQLConnection
 from mysql.connector.pooling import PooledMySQLConnection
 
-from app import config
+from config import cfg
 from env_var import read_env_var
 from typing import Union
 
@@ -13,17 +13,17 @@ class Database:
   conn: Union[PooledMySQLConnection, MySQLConnection, CMySQLConnection] = None
 
   def setup(self):
-    resolvedUsername = read_env_var(config.get_content()['mysql']['User'])
-    resolvedPassword = read_env_var(config.get_content()['mysql']['Password'])
+    resolvedUsername = read_env_var(cfg['mysql']['User'])
+    resolvedPassword = read_env_var(cfg['mysql']['Password'])
 
     self.__create_init_db(resolvedUsername, resolvedPassword)
     # it would be a better idea to await the transaction instead of sleeping the main thread
     time.sleep(2)
     self.conn = mysql.connector.connect(
-      host=config.get_content()["host"],
+      host=cfg['mysql']["Host"],
       user=resolvedUsername,
       password=resolvedPassword,
-      database=config.get_content()["database"]
+      database=cfg['mysql']["Database"]
     )
 
   def teardown(self):
@@ -33,7 +33,7 @@ class Database:
 
   def __create_init_db(self, resolvedUsername: str, resolvedPassword: str):
     initConn = mysql.connector.connect(
-      host=config.get_content()["host"],
+      host=cfg['mysql']["Host"],
       user=resolvedUsername,
       password=resolvedPassword
     )

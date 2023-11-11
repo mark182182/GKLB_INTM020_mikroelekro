@@ -1,10 +1,10 @@
-from app import smtp
 from dao.user_dao import User
 from dao.user_entry_dao import UserEntry
 from dao.user_id_dao import UserId
 from db.db import Database
 from raspi.lcd_i2c import LcdI2c
 from repo.user_id_repo import UserIdRepository
+from smtp.smtp_client import smtp
 
 
 # Database queries related to the 'belepes' table
@@ -53,11 +53,6 @@ class EntryRepository:
     cursor.close()
     return userEntries
 
-  def get_times_locked(self, userId):
-    entries: list[UserEntry] = self.get_entry_by_user(userId.get_fh_id())
-    if len(entries) == 3:
-      smtp.send_email_on_unauthorized(userId.get_rfertek(), entries)
-
   def check_entry_for_rfid(self, rErtek: str) -> UserEntry:
     cursor = self.__db.conn.cursor()
     try:
@@ -74,6 +69,7 @@ class EntryRepository:
 
       if existingUserId.get_letiltva():
         self.__lcdI2c.denied_locked()
+        self.__send_mail_on_too_many_attempts(existingUserId)
         raise ValueError(f'{rErtek} is locked, cannot enter!')
 
       cursor.execute("""SELECT fhAzonId, belepIdo FROM belepteto.belepes
@@ -111,3 +107,13 @@ class EntryRepository:
 
       userEntries.append(UserEntry(User(fhId, fhNev), rId, str(belepIdo)))
     return userEntries
+
+  def __send_mail_on_too_many_attempts(self, userId: UserId):
+    entries: list[UserEntry] = self.get_entry_by_user(userId.get_fh_id())
+    belepIdok: list[str] = []
+    for entry in entries:
+      belepIdok.append(entry.get_belep_ido())
+
+    if len(entries) == 3:
+      print("Too many attempts with locked card, sending e-mail")
+      smtp.send_email_on_unauthorized(userId.get_rfertek(), userId.get_fh_id(), belepIdok)

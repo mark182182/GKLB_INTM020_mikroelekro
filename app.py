@@ -1,6 +1,5 @@
 from flask import Flask
 
-from config import Config
 from db.db import Database
 from raspi.lcd_i2c import LcdI2c
 from raspi.rfid_spi import RfidSpi
@@ -9,20 +8,8 @@ from repo.user_id_repo import UserIdRepository
 from repo.user_repo import UserRepository
 from repo.rfid_repo import RfidRepository
 
-from jinja2 import Environment, FileSystemLoader, select_autoescape
-
-from smtp.smtp_client import SmtpClient
-
-env = Environment(
-  loader=FileSystemLoader("./templates"),
-  autoescape=select_autoescape())
-
-config = Config()
-config.read()
-
-smtp = SmtpClient()
-
 app = Flask(__name__)
+
 db = Database()
 db.setup()
 

@@ -16,12 +16,17 @@ class RfidSpi:
     self.__wait_for_input()
 
   def __wait_for_input(self):
-    if not self.__is_reading:
-      self.__is_reading = True
-      uid = self.__rdr.read_id(as_number=True)
-      if uid is not None:
-        print(f'reading card: {uid}')
-        self.__entryRepo.check_entry_for_rfid(uid)
+    try:
+      if not self.__is_reading:
+        self.__is_reading = True
+        uid = self.__rdr.read_id(as_number=True)
+        if uid is not None:
+          print(f'reading card: {uid}')
+          self.__entryRepo.check_entry_for_rfid(uid)
+        self.__is_reading = False
+    except ValueError as e:
+      print(e)
       self.__is_reading = False
+    finally:
       schedule = threading.Timer(1, self.__wait_for_input)
       schedule.start()
