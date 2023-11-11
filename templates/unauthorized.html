@@ -1,9 +1,18 @@
-<!doctype html>
-<title>Túl sok belépési kísérlet!</title>
-<p>Kártyaszám: {{ rErtek }}</p>
-<p>Belépési idők:</p>
+<!DOCTYPE html>
+<html lang="hu">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Túl sok belépési kísérlet!</title>
+</head>
+<body>
+<h1>Felhasználó: {{ fhNev }}</h1>
+<h2>Kártyaszám: {{ rErtek }}</h2>
+<h3>Belépési idők:</h3>
 <ul>
     {%- for ido in belepIdok %}
     <li>{{ ido -}}</li>
     {% endfor -%}
 </ul>
+</body>
+</html>
