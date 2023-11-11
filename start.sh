@@ -7,12 +7,20 @@ pipBin="../bin/pip"
 flaskBin="../bin/flask"
 
 function checkIfExists {
-  bin=$1
+  local bin=$1
   if [[ $(test -f $bin && echo 1 || echo 0) == 0 ]]; then
     echo "$bin does not exist"
     exit 1
   else
     echo "$bin exists"
+  fi
+}
+
+function check_if_env_var_exists {
+  local envVar=$1
+  if [[ -z $(grep -o $envVar .env) ]]; then
+    echo "Environment variable '$envVar' is not defined!"
+    exit 1
   fi
 }
 
@@ -25,14 +33,25 @@ checkIfExists $flaskBin
 echo "------ installing pip requirements --------"
 $pipBin install -r requirements.txt
 
-echo "------ setting env vars for MySQL --------"
+echo "------ exporting env vars --------"
 
-read -p "MYSQL_USERNAME: " mysqlUser
-read -sp "MYSQL_PASSWORD: " mysqlPass
-echo ""
+if [[ -f ".env" ]]; then
+  check_if_env_var_exists MYSQL_USERNAME
+  check_if_env_var_exists MYSQL_PASSWORD
+  check_if_env_var_exists SMTP_USER
+  check_if_env_var_exists SMTP_PASSWORD
+  check_if_env_var_exists FROM_ADDRESS
+  check_if_env_var_exists TO_ADDRESS
 
-export MYSQL_USERNAME=$mysqlUser
-export MYSQL_PASSWORD=$mysqlPass
+  envVars="$(cat .env)"
+  for envVar in $envVars;
+  do
+    eval "export $envVar"
+  done
+else
+  echo "Mandatory file .env does not exist!"
+  exit 1
+fi
 
 echo "------ starting docker container --------"
 mysqlContainer=$(docker ps -a -f 'name=some-mysql')

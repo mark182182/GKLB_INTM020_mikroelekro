@@ -1,5 +1,3 @@
-from concurrent.futures import ThreadPoolExecutor
-
 from flask import Flask
 
 from db.db import Database
@@ -11,6 +9,7 @@ from repo.user_repo import UserRepository
 from repo.rfid_repo import RfidRepository
 
 app = Flask(__name__)
+
 db = Database()
 db.setup()
 
