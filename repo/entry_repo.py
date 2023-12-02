@@ -2,7 +2,7 @@ from dto.user_dao import User
 from dto.user_entry_dao import UserEntry
 from dto.user_id_dao import UserId
 from db.db import Database
-from raspi.lcd_i2c import LcdI2c
+#from raspi.lcd_i2c import LcdI2c
 from repo.user_id_repo import UserIdRepository
 from smtp.smtp_client import smtp
 
@@ -11,12 +11,13 @@ from smtp.smtp_client import smtp
 class EntryRepository:
   __db: Database
   __userIdRepo: UserIdRepository
-  __lcdI2c: LcdI2c
+  #__lcdI2c: LcdI2c
 
-  def __init__(self, db: Database, userIdRepo: UserIdRepository, lcdI2c: LcdI2c):
+  def __init__(self, db: Database, userIdRepo: UserIdRepository#, lcdI2c: LcdI2c
+   ):
     self.__db = db
     self.__userIdRepo = userIdRepo
-    self.__lcdI2c = lcdI2c
+    #self.__lcdI2c = lcdI2c
 
   def get_entry_by_user(self, fhId: int, isTop1: bool = False) -> list[UserEntry]:
     cursor = self.__db.conn.cursor()
@@ -79,17 +80,17 @@ class EntryRepository:
       results = cursor.fetchall()
 
       if len(results) != 1:
-        self.__lcdI2c.denied_generic()
+        #self.__lcdI2c.denied_generic()
         raise ValueError(f'Unable to enter using rfid value {rErtek}!')
 
       userEntry = self.get_entry_by_user(existingUserId.get_fh_id(), True)
 
       if len(userEntry) != 1:
-        self.__lcdI2c.denied_generic()
+        #self.__lcdI2c.denied_generic()
         raise ValueError(f'Unable to enter using rfid value {rErtek}!')
 
       self.__db.conn.commit()
-      self.__lcdI2c.allowed()
+      #self.__lcdI2c.allowed()
       return userEntry[0]
     except ValueError as e:
       raise e
