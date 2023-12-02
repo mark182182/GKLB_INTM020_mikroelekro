@@ -1,4 +1,4 @@
-from dao.user_dao import User
+from dto.user_dao import User
 from db.db import Database
 
 

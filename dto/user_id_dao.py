@@ -1,4 +1,4 @@
-# Data access object for the 'felhasznaloAzonosito' table
+# Data transfer object for the 'felhasznaloAzonosito' table
 class UserId:
   __fhAzonId: int
   __fhId: int

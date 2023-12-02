@@ -1,4 +1,4 @@
-# Data access object for the 'felhasznalok' table
+# Data transfer object for the 'felhasznalok' table
 class User:
   __fhId: int
   __fhNev: str
