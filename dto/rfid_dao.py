@@ -1,4 +1,4 @@
-# Data access object for the 'rfid' table
+# Data transfer object for the 'rfid' table
 class Rfid:
   __rId: int
   __rErtek: str

@@ -1,5 +1,5 @@
 from db.db import Database
-from dao.rfid_dao import Rfid
+from dto.rfid_dao import Rfid
 
 
 # Database queries related to the 'rfid' table

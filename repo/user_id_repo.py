@@ -1,5 +1,5 @@
-from dao.rfid_dao import Rfid
-from dao.user_id_dao import UserId
+from dto.rfid_dao import Rfid
+from dto.user_id_dao import UserId
 from db.db import Database
 from repo.rfid_repo import RfidRepository
 

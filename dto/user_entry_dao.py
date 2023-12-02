@@ -1,5 +1,5 @@
-# Data access object for retrieving data from the 'felhasznaloAzonosito' and 'belepes' tables
-from dao.user_dao import User
+# Data transfer object for retrieving data from the 'felhasznaloAzonosito' and 'belepes' tables
+from dto.user_dao import User
 
 
 class UserEntry:
