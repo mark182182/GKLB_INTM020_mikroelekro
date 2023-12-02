@@ -73,7 +73,7 @@
 			\justifying
 				\item A projekt célja egy olyan bemutató berendezés elkészítse, amely segítségével képesek vagyunk belépési eseményeket megjeleníteni, illetve karbantartani RFID kulcsok segítségével.
 				
-				\item Szükségünk van egy kártyaolvasó eszközre, amely a felhasználóknak kiosztott kártyák/kulcsok értékét beolvasni.
+				\item Szükségünk van egy kártyaolvasó eszközre, amely képes a felhasználóknak kiosztott kártyák/kulcsok értékét beolvasni.
 				
 				\item Képesnek kell lennünk ezeket a kártyákat felhasználókhoz társítanunk.
 				
@@ -109,37 +109,17 @@
 				\justifying
 				\item A Raspberry Pi 4 Model B eszköz (lényegében egy ARM architektúrájú kis számítógépről van szó) rendelkezik a gyártó által fejlesztett operációs rendszerrel, ezért ennek használata tűnt a legcélszerűbbnek, mert könnyen kezelhető és széleskörű csomagtámogatással rendelkezik.
 				
-				\item Követelményként szükségünk van egy adatokat szolgáltató alkalmazást fejleszteni, és mivel egy bemutató alkalmazásról van szó, ezért az egyszerűség kedvéért Python nyelven készül el, különböző \emph{pip} csomagok használatával.
+				\item Követelményként szükségünk van egy adatokat szolgáltató alkalmazást fejleszteni, és mivel egy bemutató alkalmazásról van szó, ezért az egyszerűség kedvéért Python nyelven készül el, különböző \texttt{pip} csomagok használatával.
 				
 				\item Az adattároláshoz szükséges adatbázis kezelő kiválasztásánál is az egyszerűséget és könnyű kezelhetőséget érdemes alapul venni, ami esetén a MySQL jó választásnak bizonyul.
 			\end{itemize}
 		\vfill
 	
-	\section{Hardver specifikáció}
-		\subsection{Próbapanel}
-			\begin{flushleft}
-				\justifying
-				A felhasznált próbapanel modellje: BB-102 (630/200)
-			\end{flushleft}
-			\begin{minipage}{\linewidth}
-				\centering
-				\includegraphics[width=1.0\linewidth]{img/breadboard_diagram}
-				\captionof{figure}{A hardveres terv próbapanelen}
-				\label{fig:1breadboarddiagram}
-			\end{minipage}
-			\begin{minipage}{\linewidth}
-				\centering
-				\includegraphics[width=0.7\linewidth]{img/3_futas}
-				\captionof{figure}{A projekt tényleges megvalósítása üzemkész állapotban}
-				\label{fig:3futas}
-				
-				
-			\end{minipage}
-			
+	\section{Hardver specifikáció}			
 		\subsection{Raspberry Pi}
 		\begin{flushleft}
 			\justifying
-			Az eszköz rendelkezik egy 40 csatlakozási pontos GPIO interfésszel. Ennek van egy belső számozása, amit a Raspberry Pi rendszere tud kezelni, illetve egy 1-40-ig tartozó számsorozat, ami a teljes lábkiosztásra vonatkozik. A következő ábrán a GPIO\# jelölés a belső számozást, a csatlakozási pontok melletti számok pedig a teljes lábkiosztást adják meg. Az LCD kijelző és az RFID olvasó a teljes lábkiosztás szerint van bekötve.
+			Az eszköz rendelkezik egy 40 csatlakozási pontos GPIO interfésszel. Ennek van egy belső számozása, amit a Raspberry Pi rendszere tud kezelni, illetve egy 1-40-ig tartozó számsorozat, ami a teljes lábkiosztásra vonatkozik. A következő ábrán a \emph{GPIO\#} jelölés a belső számozást, a csatlakozási pontok melletti számok pedig a teljes lábkiosztást adják meg. Az LCD kijelző és az RFID olvasó a teljes lábkiosztás szerint van bekötve.
 		\end{flushleft}
 			\begin{minipage}{\linewidth}
 				\centering
@@ -252,6 +232,20 @@
 			\end{tabular}
 			\captionof{table}{Az LCD kijelző bekötési terve}
 			\label{table:lcdconnections}
+		\end{minipage}
+		\subsection{Próbapanel}
+			A felhasznált próbapanel modellje: BB-102 (630/200) \\
+		\begin{minipage}{\linewidth}
+			\centering
+			\includegraphics[width=0.7\linewidth]{img/breadboard_diagram}
+			\captionof{figure}{A hardveres terv próbapanelen}
+			\label{fig:1breadboarddiagram}
+		\end{minipage}
+		\begin{minipage}{\linewidth}
+			\centering
+			\includegraphics[width=0.7\linewidth]{img/3_futas}
+			\captionof{figure}{A projekt tényleges megvalósítása üzemkész állapotban}
+			\label{fig:3futas}
 		\end{minipage}
 		
 	\section{Szoftver specifikáció}
@@ -448,13 +442,6 @@
 				\color{blue}
 				\href{https://github.com/mark182182/GKLB_INTM020_mikroelektromechanikai_rendszerek/tree/main/repo}{repo}
 				\color{black} mappában került megvalósításra.
-				
-				\color{blue}
-				\href{https://github.com/mark182182/GKLB_INTM020_mikroelektromechanikai_rendszerek/tree/main/dao}{dao}
-				\color{black} mappában
-				
-				
-				
 			\end{flushleft}
 
 		\subsection{SPI kommunikáció}
@@ -463,11 +450,15 @@
 				Az implementáció a következő fájlban található:
 				\color{blue}
 				\href{https://github.com/mark182182/GKLB_INTM020_mikroelektromechanikai_rendszerek/blob/main/raspi/rfid_spi.py}{rfid\_spi.py}
-				
-				A kommunikáció a \texttt{pi-rc522} csomag segítségével történik.
-				
+				\color{black} \\
+				A kommunikáció a \texttt{pi-rc522} csomag segítségével történik, amely rendelkezik olyan tagfügg-\\vényekkel, ami az RFID olvasó aktuális állapotát le tudja kérdezni és karakterláncként visszaadni.
+				A Python beépített \texttt{threading} moduljával képesek vagyunk időzítőt létrehozni, amely ez esetben másodpercenként kiolvassa az RFID olvasó aktuális értékét. Ha nem üres karakterláncot kapunk vissza az olvasótól, akkor továbbmegyünk az azonosítás részhez. \\
+				Információ a Python \texttt{threading} modulról
 				\color{blue}
-				\href{https://pip.pypa.io/en/stable/user_guide/}{ezen a linken elérhető}\color{black}.
+				\href{https://docs.python.org/3/library/threading.html}{ezen a linken elérhető}\color{black}. \\
+				Információ a \texttt{pi-rc522} csomagról
+				\color{blue}
+				\href{https://github.com/ondryaso/pi-rc522}{ezen a linken elérhető}\color{black}.
 			\end{flushleft}
 			
 		\subsection{I$^2$C kommunikáció}
@@ -475,7 +466,11 @@
 				\justifying
 				Az implementáció a következő fájlban található:
 				\color{blue} \href{https://github.com/mark182182/GKLB_INTM020_mikroelektromechanikai_rendszerek/blob/main/raspi/lcd_i2c.py}{lcd\_2c.py}
-				
+				\color{black} \\
+				Az LCD kijelzővel való kommunikáció az \texttt{rpi\_lcd} csomag segítségével valósul meg. Alapértelmezetten a \emph{Kerem erintse a kartyajat!} feliratot jelenítjük meg, majd kiírás során figyelünk arra, hogy a megjelenítendő üzenetet 5 másodpercig hagyjuk a kijelzőn, majd töröljük a tartalmat és visszaállítjuk az alapméretezett üzenetet. \\
+				Információ az \texttt{rpi\_lcd} csomagról
+				\color{blue}
+				\href{https://github.com/bogdal/rpi-lcd}{ezen a linken elérhető}\color{black}.
 				
 			\end{flushleft}
 		
@@ -484,6 +479,12 @@
 			\justifying
 			Az implementáció a következő fájlban található:
 			\color{blue} \href{https://github.com/mark182182/GKLB_INTM020_mikroelektromechanikai_rendszerek/blob/main/smtp/smtp_client.py}{smtp\_client.py}
+			
+			smtplib modul
+			https://docs.python.org/3/library/smtplib.html
+			
+			jinja2 csomag
+			https://jinja.palletsprojects.com/en/3.1.x/
 		\end{flushleft}	
 			
 			
@@ -493,7 +494,12 @@
 				\justifying
 				Flask https://flask.palletsprojects.com/en/3.0.x/
 				Web Server Gateway Interface
+				
+				A lekérdezésekhez 
+				\color{blue}
+				\href{https://github.com/mark182182/GKLB_INTM020_mikroelektromechanikai_rendszerek/tree/main/dto}{dto}
+				\color{black} mappában
 			\end{flushleft}
-			
-
+		\vfill
+Ez a dokumentum a \color{blue} \href{https://www.latex-project.org/}{LaTeX} \color{black} szövegformázó rendszer segítségével jött létre.
 \end{document}
